@@ -29,21 +29,21 @@
     --danger-dim: rgba(248, 113, 113, 0.14);
     --purple: #A78BFA;
     --purple-dim: rgba(167, 139, 250, 0.14);
-
+ 
     --font-display: 'Instrument Serif', Georgia, serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
-
+ 
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25);
     --shadow-lg: 0 20px 50px rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.2);
-
+ 
     --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 16px;
     --radius-xl: 24px;
   }
-
+ 
   @media (prefers-color-scheme: light) {
     :root {
       --bg: #F6F4EF;
@@ -70,9 +70,9 @@
       --shadow-lg: 0 20px 50px rgba(16, 18, 25, 0.1), 0 4px 12px rgba(16, 18, 25, 0.05);
     }
   }
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   html, body {
     font-family: var(--font-sans);
     background: var(--bg);
@@ -82,7 +82,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
+ 
   body {
     background-image:
       radial-gradient(circle at 15% 10%, rgba(63, 167, 255, 0.06) 0%, transparent 40%),
@@ -90,7 +90,7 @@
     min-height: 100vh;
     padding: 40px 24px 60px;
   }
-
+ 
   @media (prefers-color-scheme: light) {
     body {
       background-image:
@@ -98,17 +98,17 @@
         radial-gradient(circle at 85% 90%, rgba(124, 58, 237, 0.04) 0%, transparent 40%);
     }
   }
-
+ 
   .container {
     max-width: 1080px;
     margin: 0 auto;
   }
-
+ 
   header {
     text-align: center;
     margin-bottom: 48px;
   }
-
+ 
   .eyebrow {
     display: inline-flex;
     align-items: center;
@@ -123,7 +123,7 @@
     margin-bottom: 20px;
     font-weight: 500;
   }
-
+ 
   .eyebrow-dot {
     width: 6px;
     height: 6px;
@@ -132,12 +132,12 @@
     box-shadow: 0 0 8px var(--accent);
     animation: pulse 2.4s ease-in-out infinite;
   }
-
+ 
   @keyframes pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.5; transform: scale(0.85); }
   }
-
+ 
   h1 {
     font-family: var(--font-display);
     font-size: clamp(40px, 6vw, 68px);
@@ -146,23 +146,23 @@
     letter-spacing: -0.02em;
     margin-bottom: 12px;
   }
-
+ 
   h1 em {
     font-style: italic;
     color: var(--accent);
   }
-
+ 
   .subtitle {
     font-size: 16px;
     color: var(--text-muted);
     max-width: 580px;
     margin: 0 auto;
   }
-
+ 
   .scenario-section {
     margin-bottom: 32px;
   }
-
+ 
   .section-label {
     font-size: 11px;
     text-transform: uppercase;
@@ -172,13 +172,13 @@
     margin-bottom: 12px;
     padding-left: 4px;
   }
-
+ 
   .scenarios {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 10px;
   }
-
+ 
   .scen-btn {
     background: var(--bg-elevated);
     border: 1px solid var(--border);
@@ -194,7 +194,7 @@
     position: relative;
     overflow: hidden;
   }
-
+ 
   .scen-btn::before {
     content: '';
     position: absolute;
@@ -204,26 +204,26 @@
     transition: opacity 0.2s;
     pointer-events: none;
   }
-
+ 
   .scen-btn:hover {
     border-color: var(--border-strong);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
   }
-
+ 
   .scen-btn:hover::before {
     opacity: 0.5;
   }
-
+ 
   .scen-btn.active {
     border-color: var(--accent);
     background: var(--accent-dim);
   }
-
+ 
   .scen-btn.active::before {
     opacity: 1;
   }
-
+ 
   .scen-title {
     font-weight: 600;
     font-size: 14px;
@@ -231,14 +231,14 @@
     letter-spacing: -0.005em;
     position: relative;
   }
-
+ 
   .scen-desc {
     font-size: 12px;
     color: var(--text-muted);
     line-height: 1.45;
     position: relative;
   }
-
+ 
   .scen-tag {
     display: inline-block;
     font-size: 10px;
@@ -250,13 +250,13 @@
     margin-bottom: 8px;
     font-weight: 500;
   }
-
+ 
   .tag-happy { background: var(--success-dim); color: var(--success); }
   .tag-ambig { background: var(--warning-dim); color: var(--warning); }
   .tag-cascade { background: var(--accent-dim); color: var(--accent); }
   .tag-fail { background: var(--danger-dim); color: var(--danger); }
   .tag-swarm { background: var(--purple-dim); color: var(--purple); }
-
+ 
   .stage {
     background: var(--bg-elevated);
     border: 1px solid var(--border);
@@ -264,7 +264,7 @@
     overflow: hidden;
     box-shadow: var(--shadow-lg);
   }
-
+ 
   .controls {
     display: flex;
     align-items: center;
@@ -274,7 +274,7 @@
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
   }
-
+ 
   .clock {
     font-family: var(--font-mono);
     font-size: 15px;
@@ -287,19 +287,19 @@
     text-align: center;
     letter-spacing: 0.02em;
   }
-
+ 
   .next-hint {
     font-size: 13px;
     color: var(--text-muted);
     flex: 1;
     min-width: 180px;
   }
-
+ 
   .next-hint strong {
     color: var(--text);
     font-weight: 500;
   }
-
+ 
   .btn {
     background: var(--bg-elevated);
     border: 1px solid var(--border);
@@ -315,28 +315,28 @@
     align-items: center;
     gap: 6px;
   }
-
+ 
   .btn:hover { border-color: var(--border-strong); background: var(--bg-subtle); }
   .btn:active { transform: scale(0.97); }
   .btn[disabled] { opacity: 0.4; cursor: not-allowed; transform: none; }
   .btn[disabled]:hover { background: var(--bg-elevated); border-color: var(--border); }
-
+ 
   .btn-primary {
     background: var(--accent);
     border-color: var(--accent);
     color: white;
   }
-
+ 
   .btn-primary:hover {
     background: var(--accent);
     border-color: var(--accent);
     filter: brightness(1.1);
   }
-
+ 
   @media (prefers-color-scheme: light) {
     .btn-primary { color: #fff; }
   }
-
+ 
   .chat {
     padding: 24px;
     min-height: 360px;
@@ -348,7 +348,7 @@
     max-height: 520px;
     overflow-y: auto;
   }
-
+ 
   .chat-empty {
     display: flex;
     flex-direction: column;
@@ -360,7 +360,7 @@
     padding: 40px 32px;
     margin: auto;
   }
-
+ 
   .chat-empty-icon {
     width: 48px;
     height: 48px;
@@ -374,22 +374,22 @@
     font-size: 26px;
     font-style: italic;
   }
-
+ 
   .chat-empty-text {
     color: var(--text-muted);
     font-size: 13px;
     max-width: 320px;
   }
-
+ 
   .msg {
     animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
-
+ 
   @keyframes slideIn {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
+ 
   .msg-bot, .msg-contact {
     max-width: 82%;
     padding: 10px 14px;
@@ -397,21 +397,21 @@
     font-size: 14px;
     line-height: 1.55;
   }
-
+ 
   .msg-bot {
     background: var(--bg-subtle);
     border: 1px solid var(--border);
     align-self: flex-start;
     border-top-left-radius: 4px;
   }
-
+ 
   .msg-contact {
     background: var(--accent-dim);
     border: 1px solid var(--accent-border);
     align-self: flex-end;
     border-top-right-radius: 4px;
   }
-
+ 
   .msg-head {
     font-size: 11px;
     color: var(--text-muted);
@@ -419,9 +419,9 @@
     font-weight: 500;
     letter-spacing: 0.01em;
   }
-
+ 
   .msg-contact .msg-head { color: var(--accent); }
-
+ 
   .msg-system {
     align-self: center;
     max-width: 100%;
@@ -434,7 +434,7 @@
     align-items: center;
     gap: 8px;
   }
-
+ 
   .msg-system::before,
   .msg-system::after {
     content: '';
@@ -443,7 +443,7 @@
     background: var(--border);
     max-width: 48px;
   }
-
+ 
   .msg-event {
     align-self: stretch;
     display: flex;
@@ -455,20 +455,21 @@
     line-height: 1.5;
     font-weight: 500;
   }
-
+ 
   .msg-event-timeout { background: var(--warning-dim); color: var(--warning); }
   .msg-event-escalate { background: var(--accent-dim); color: var(--accent); }
   .msg-event-resolve { background: var(--success-dim); color: var(--success); }
+  .msg-event-ack { background: var(--success-dim); color: var(--success); }
   .msg-event-close { background: var(--warning-dim); color: var(--warning); }
   .msg-event-fail { background: var(--danger-dim); color: var(--danger); }
   .msg-event-ai { background: var(--purple-dim); color: var(--purple); font-style: italic; font-weight: 400; }
-
+ 
   .msg-event-icon {
     width: 16px;
     height: 16px;
     flex-shrink: 0;
   }
-
+ 
   .state-panel {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -476,12 +477,12 @@
     background: var(--border);
     border-top: 1px solid var(--border);
   }
-
+ 
   .state-card {
     padding: 14px 18px;
     background: var(--bg-elevated);
   }
-
+ 
   .state-label {
     font-size: 11px;
     text-transform: uppercase;
@@ -490,14 +491,14 @@
     margin-bottom: 6px;
     font-weight: 500;
   }
-
+ 
   .state-value {
     font-size: 15px;
     font-weight: 500;
     color: var(--text);
     font-family: var(--font-sans);
   }
-
+ 
   .status-pill {
     display: inline-flex;
     align-items: center;
@@ -508,7 +509,7 @@
     font-weight: 500;
     font-family: var(--font-mono);
   }
-
+ 
   .status-pill::before {
     content: '';
     width: 6px;
@@ -516,26 +517,27 @@
     border-radius: 50%;
     background: currentColor;
   }
-
+ 
   .status-active { background: var(--accent-dim); color: var(--accent); }
   .status-resolved { background: var(--success-dim); color: var(--success); }
+  .status-ack { background: var(--success-dim); color: var(--success); }
   .status-closed { background: var(--warning-dim); color: var(--warning); }
   .status-failed { background: var(--danger-dim); color: var(--danger); }
-
+ 
   .status-active::before { animation: pulse 2.4s ease-in-out infinite; }
-
+ 
   footer {
     margin-top: 32px;
     text-align: center;
     font-size: 12px;
     color: var(--text-dim);
   }
-
+ 
   footer strong {
     color: var(--text-muted);
     font-weight: 500;
   }
-
+ 
   @media (max-width: 640px) {
     body { padding: 24px 16px 40px; }
     h1 { font-size: 36px; }
@@ -553,12 +555,12 @@
     <h1>Simulador de <em>cascata</em> de escalonamento</h1>
     <p class="subtitle">Escolha um cenário, avance o tempo passo a passo e observe como a sessão de comunicação evolui no canal textual. Dados fictícios para fins de discussão.</p>
   </header>
-
+ 
   <div class="scenario-section">
     <div class="section-label">Cenários</div>
     <div class="scenarios" id="scenarios"></div>
   </div>
-
+ 
   <div class="stage">
     <div class="controls">
       <span class="clock" id="clock">t+00:00</span>
@@ -586,12 +588,12 @@
       </div>
     </div>
   </div>
-
+ 
   <footer>
     <strong>Hitfy Voice AI v2</strong> · Comunicação por texto em grupo · Simulador interativo · Dados fictícios
   </footer>
 </div>
-
+ 
 <script>
 const ICONS = {
   clock: '<svg class="msg-event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>',
@@ -601,7 +603,7 @@ const ICONS = {
   x: '<svg class="msg-event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>',
   spark: '<svg class="msg-event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L13.5 9 L20 10 L14.5 13.5 L16 20 L12 16.5 L8 20 L9.5 13.5 L4 10 L10.5 9 Z"/></svg>',
 };
-
+ 
 const SCENARIOS = [
   {
     id: 'happy',
@@ -627,6 +629,20 @@ const SCENARIOS = [
       {t:22, kind:'contact', who:'Fernanda', text:'manut, já tem expansão agendada pra amanhã'},
       {t:23, kind:'ai', text:'Agente IA: resposta inclui "manut" + justificativa. Mapeia para manutenção.'},
       {t:24, kind:'resolve', action:'Colocar em manutenção', by:'Fernanda'},
+    ]
+  },
+  {
+    id: 'ack-no-action',
+    title: 'Ciência sem ação',
+    desc: 'Contato confirma ciência, sem chamado nem manut',
+    tag: 'Cenário padrão',
+    tagClass: 'tag-happy',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @Gustavo (N1)', text:'🚨 Latência elevada em APP-CHECKOUT-02. Deseja abrir CHAMADO ou colocar em MANUTENÇÃO?', level:'N1', contact:'Gustavo'},
+      {t:18, kind:'contact', who:'Gustavo', text:'ciente, é efeito do deploy das 14h, vai normalizar em uns 5min'},
+      {t:19, kind:'ai', text:'Agente IA: contato demonstra ciência + explicação da causa + dispensa ação. Nenhuma das 2 ações foi solicitada, mas o alerta foi reconhecido com justificativa.'},
+      {t:20, kind:'system', text:'Encerramento sem chamado e sem manut — este é um desfecho legítimo.'},
+      {t:21, kind:'ack', by:'Gustavo'},
     ]
   },
   {
@@ -656,25 +672,25 @@ const SCENARIOS = [
       {t:0, kind:'bot', who:'Bot → @Maria (N1)', text:'🚨 CPU > 95% em DB-ORACLE-03. Deseja abrir um CHAMADO ou colocar em MANUTENÇÃO?', level:'N1', contact:'Maria'},
       {t:132, kind:'contact', who:'Maria', text:'tá, vou olhar'},
       {t:133, kind:'ai', text:'Agente IA: ciência sem escolher entre as 2 ações. Classifica como ambíguo.'},
-      {t:134, kind:'bot', who:'Bot → @Maria (insistência)', text:'Obrigado pelo retorno, @Maria. Só para confirmar: CHAMADO ou MANUTENÇÃO? (TTL resetado para 5 min)'},
+      {t:134, kind:'bot', who:'Bot → @Maria (insistência)', text:'Obrigado pelo retorno, @Maria. Só para confirmar: deseja abrir um CHAMADO, colocar em MANUTENÇÃO, ou apenas confirmar ciência (sem ação)? (TTL resetado para 5 min)'},
       {t:434, kind:'timeout', text:'5 min sem resposta classificável após insistência única.'},
       {t:435, kind:'close', reason:'encerrada_apos_ambiguidade'},
     ]
   },
   {
     id: 'ambiguous-recover',
-    title: 'Ambíguo → recupera',
-    desc: 'Contato esclarece após insistência',
+    title: 'Ambíguo → esclarece',
+    desc: 'Contato esclarece ciência sem ação após insistência',
     tag: 'Recuperação',
     tagClass: 'tag-happy',
     steps: [
       {t:0, kind:'bot', who:'Bot → @Diego (N1)', text:'🚨 Queda de link em ROTA-SAO-01. Abrir CHAMADO ou MANUTENÇÃO?', level:'N1', contact:'Diego'},
       {t:45, kind:'contact', who:'Diego', text:'blz, eu cuido'},
-      {t:46, kind:'ai', text:'Agente IA: aceitou o alerta mas não escolheu entre as 2 ações. Ambíguo.'},
-      {t:47, kind:'bot', who:'Bot → @Diego (insistência)', text:'@Diego, para finalizar: você quer abrir um CHAMADO ou colocar em MANUTENÇÃO?'},
-      {t:120, kind:'contact', who:'Diego', text:'ah, chamado mesmo'},
-      {t:121, kind:'ai', text:'Agente IA: resposta clara após insistência. Ação extraída: abrir chamado.'},
-      {t:122, kind:'resolve', action:'Abrir chamado', by:'Diego'},
+      {t:46, kind:'ai', text:'Agente IA: aceitou o alerta mas não escolheu entre as 2 ações nem confirmou ciência sem ação. Ambíguo.'},
+      {t:47, kind:'bot', who:'Bot → @Diego (insistência)', text:'@Diego, para finalizar: deseja abrir um CHAMADO, colocar em MANUTENÇÃO, ou apenas confirmar ciência (sem ação)?'},
+      {t:120, kind:'contact', who:'Diego', text:'ah, sem ação mesmo, é um teste de failover que eu tô fazendo agora'},
+      {t:121, kind:'ai', text:'Agente IA: contato esclarece ciência + justificativa. Sem chamado, sem manutenção.'},
+      {t:122, kind:'ack', by:'Diego'},
     ]
   },
   {
@@ -773,10 +789,10 @@ const SCENARIOS = [
     ]
   },
 ];
-
+ 
 let current = SCENARIOS[0];
 let stepIdx = 0;
-
+ 
 const $ = (id) => document.getElementById(id);
 const elScenarios = $('scenarios');
 const elClock = $('clock');
@@ -787,7 +803,7 @@ const elChat = $('chat');
 const elStatus = $('status');
 const elLevel = $('level');
 const elContact = $('contact');
-
+ 
 function renderScenarios() {
   elScenarios.innerHTML = SCENARIOS.map(s => `
     <button class="scen-btn ${s.id === current.id ? 'active' : ''}" data-id="${s.id}">
@@ -803,18 +819,18 @@ function renderScenarios() {
     });
   });
 }
-
+ 
 function fmtTime(t) {
   const m = Math.floor(t / 60);
   const s = t % 60;
   return 't+' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
 }
-
+ 
 function setStatus(key, label) {
   elStatus.className = 'status-pill status-' + key;
   elStatus.textContent = label;
 }
-
+ 
 function renderEmpty() {
   elChat.innerHTML = `
     <div class="chat-empty">
@@ -823,7 +839,7 @@ function renderEmpty() {
     </div>
   `;
 }
-
+ 
 function reset() {
   stepIdx = 0;
   elClock.textContent = 't+00:00';
@@ -835,7 +851,7 @@ function reset() {
   renderEmpty();
   updateHint();
 }
-
+ 
 function updateHint() {
   if (stepIdx >= current.steps.length) {
     elHint.innerHTML = '<strong>Cenário concluído.</strong> Escolha outro acima ou reinicie.';
@@ -853,18 +869,19 @@ function updateHint() {
     timeout: 'TTL de 5min expira',
     escalate: 'escalação de nível',
     resolve: 'sessão resolvida',
+    ack: 'ciência sem ação',
     close: 'encerramento',
     fail: 'escalation_failed',
   };
   const deltaStr = delta === 0 ? 'imediato' : delta >= 60 ? `+${Math.floor(delta/60)} min` : `+${delta}s`;
   elHint.innerHTML = `Próximo: <strong>${labels[next.kind]}</strong> <span style="color: var(--text-dim);">· ${deltaStr}</span>`;
 }
-
+ 
 function clearEmpty() {
   const empty = elChat.querySelector('.chat-empty');
   if (empty) elChat.innerHTML = '';
 }
-
+ 
 function addMsg(step) {
   clearEmpty();
   const d = document.createElement('div');
@@ -893,6 +910,10 @@ function addMsg(step) {
     d.classList.add('msg-event', 'msg-event-resolve');
     d.innerHTML = `${ICONS.check}<span>Sessão resolvida por <strong>${step.by}</strong> — ${step.action}</span>`;
     setStatus('resolved', 'resolvido');
+  } else if (step.kind === 'ack') {
+    d.classList.add('msg-event', 'msg-event-ack');
+    d.innerHTML = `${ICONS.check}<span>Sessão encerrada por <strong>${step.by}</strong> — ciente, sem ação necessária</span>`;
+    setStatus('ack', 'reconhecido_sem_acao');
   } else if (step.kind === 'close') {
     d.classList.add('msg-event', 'msg-event-close');
     d.innerHTML = `${ICONS.stop}<span>Sessão encerrada: <strong>${step.reason}</strong></span>`;
@@ -905,7 +926,7 @@ function addMsg(step) {
   elChat.appendChild(d);
   elChat.scrollTop = elChat.scrollHeight;
 }
-
+ 
 elStep.addEventListener('click', () => {
   if (stepIdx >= current.steps.length) return;
   const step = current.steps[stepIdx];
@@ -916,9 +937,9 @@ elStep.addEventListener('click', () => {
   stepIdx++;
   updateHint();
 });
-
+ 
 elReset.addEventListener('click', reset);
-
+ 
 reset();
 </script>
 </body>
