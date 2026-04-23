@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hitfy Voice AI v2 — Simulador de Cascata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0E1116;
+    --bg-elevated: #161A21;
+    --bg-surface: #1C212A;
+    --bg-subtle: #242A34;
+    --border: #2A3240;
+    --border-strong: #3B4657;
+    --text: #E6E9EE;
+    --text-muted: #8B93A3;
+    --text-dim: #5B6377;
+    --accent: #3FA7FF;
+    --accent-dim: rgba(63, 167, 255, 0.12);
+    --accent-border: rgba(63, 167, 255, 0.35);
+    --success: #4ADE80;
+    --success-dim: rgba(74, 222, 128, 0.14);
+    --warning: #FBBF24;
+    --warning-dim: rgba(251, 191, 36, 0.15);
+    --danger: #F87171;
+    --danger-dim: rgba(248, 113, 113, 0.14);
+    --purple: #A78BFA;
+    --purple-dim: rgba(167, 139, 250, 0.14);
+
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25);
+    --shadow-lg: 0 20px 50px rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.2);
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #F6F4EF;
+      --bg-elevated: #FFFFFF;
+      --bg-surface: #FAF8F3;
+      --bg-subtle: #EFECE3;
+      --border: #E2DFD5;
+      --border-strong: #CAC5B6;
+      --text: #1B1F27;
+      --text-muted: #5F6573;
+      --text-dim: #8B91A0;
+      --accent: #1E6FD9;
+      --accent-dim: rgba(30, 111, 217, 0.08);
+      --accent-border: rgba(30, 111, 217, 0.28);
+      --success: #16A34A;
+      --success-dim: rgba(22, 163, 74, 0.1);
+      --warning: #D97706;
+      --warning-dim: rgba(217, 119, 6, 0.12);
+      --danger: #DC2626;
+      --danger-dim: rgba(220, 38, 38, 0.1);
+      --purple: #7C3AED;
+      --purple-dim: rgba(124, 58, 237, 0.09);
+      --shadow-md: 0 4px 12px rgba(16, 18, 25, 0.08), 0 1px 2px rgba(16, 18, 25, 0.04);
+      --shadow-lg: 0 20px 50px rgba(16, 18, 25, 0.1), 0 4px 12px rgba(16, 18, 25, 0.05);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(63, 167, 255, 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(167, 139, 250, 0.05) 0%, transparent 40%);
+    min-height: 100vh;
+    padding: 40px 24px 60px;
+  }
+
+  @media (prefers-color-scheme: light) {
+    body {
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(30, 111, 217, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 85% 90%, rgba(124, 58, 237, 0.04) 0%, transparent 40%);
+    }
+  }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 68px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  .scenario-section {
+    margin-bottom: 32px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+
+  .scenarios {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .scen-btn {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scen-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, var(--accent-dim) 100%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+
+  .scen-btn:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .scen-btn:hover::before {
+    opacity: 0.5;
+  }
+
+  .scen-btn.active {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .scen-btn.active::before {
+    opacity: 1;
+  }
+
+  .scen-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+    letter-spacing: -0.005em;
+    position: relative;
+  }
+
+  .scen-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.45;
+    position: relative;
+  }
+
+  .scen-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .tag-happy { background: var(--success-dim); color: var(--success); }
+  .tag-ambig { background: var(--warning-dim); color: var(--warning); }
+  .tag-cascade { background: var(--accent-dim); color: var(--accent); }
+  .tag-fail { background: var(--danger-dim); color: var(--danger); }
+  .tag-swarm { background: var(--purple-dim); color: var(--purple); }
+
+  .stage {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .clock {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--bg-subtle);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    min-width: 96px;
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+
+  .next-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .next-hint strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .btn {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 16px;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn:hover { border-color: var(--border-strong); background: var(--bg-subtle); }
+  .btn:active { transform: scale(0.97); }
+  .btn[disabled] { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn[disabled]:hover { background: var(--bg-elevated); border-color: var(--border); }
+
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    filter: brightness(1.1);
+  }
+
+  @media (prefers-color-scheme: light) {
+    .btn-primary { color: #fff; }
+  }
+
+  .chat {
+    padding: 24px;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--bg-elevated);
+    position: relative;
+    max-height: 520px;
+    overflow-y: auto;
+  }
+
+  .chat-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: 1;
+    gap: 16px;
+    padding: 40px 32px;
+    margin: auto;
+  }
+
+  .chat-empty-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--bg-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-style: italic;
+  }
+
+  .chat-empty-text {
+    color: var(--text-muted);
+    font-size: 13px;
+    max-width: 320px;
+  }
+
+  .msg {
+    animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-bot, .msg-contact {
+    max-width: 82%;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .msg-bot {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    align-self: flex-start;
+    border-top-left-radius: 4px;
+  }
+
+  .msg-contact {
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    align-self: flex-end;
+    border-top-right-radius: 4px;
+  }
+
+  .msg-head {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .msg-contact .msg-head { color: var(--accent); }
+
+  .msg-system {
+    align-self: center;
+    max-width: 100%;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-style: italic;
+    padding: 4px 12px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .msg-system::before,
+  .msg-system::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 48px;
+  }
+
+  .msg-event {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  .msg-event-timeout { background: var(--warning-dim); color: var(--warning); }
+  .msg-event-escalate { background: var(--accent-dim); color: var(--accent); }
+  .msg-event-resolve { background: var(--success-dim); color: var(--success); }
+  .msg-event-close { background: var(--warning-dim); color: var(--warning); }
+  .msg-event-fail { background: var(--danger-dim); color: var(--danger); }
+  .msg-event-ai { background: var(--purple-dim); color: var(--purple); font-style: italic; font-weight: 400; }
+
+  .msg-event-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .state-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border-top: 1px solid var(--border);
+  }
+
+  .state-card {
+    padding: 14px 18px;
+    background: var(--bg-elevated);
+  }
+
+  .state-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .state-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    font-family: var(--font-sans);
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+  }
+
+  .status-pill::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .status-active { background: var(--accent-dim); color: var(--accent); }
+  .status-resolved { background: var(--success-dim); color: var(--success); }
+  .status-closed { background: var(--warning-dim); color: var(--warning); }
+  .status-failed { background: var(--danger-dim); color: var(--danger); }
+
+  .status-active::before { animation: pulse 2.4s ease-in-out infinite; }
+
+  footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  footer strong {
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 24px 16px 40px; }
+    h1 { font-size: 36px; }
+    .controls { flex-direction: column; align-items: stretch; }
+    .clock { align-self: flex-start; }
+    .msg-bot, .msg-contact { max-width: 92%; }
+    .scen-btn { padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="eyebrow"><span class="eyebrow-dot"></span>Hitfy Voice AI — Etapa 2 Omnichannel</div>
+    <h1>Simulador de <em>cascata</em> de escalonamento</h1>
+    <p class="subtitle">Escolha um cenário, avance o tempo passo a passo e observe como a sessão de comunicação evolui no canal textual. Dados fictícios para fins de discussão.</p>
+  </header>
+
+  <div class="scenario-section">
+    <div class="section-label">Cenários</div>
+    <div class="scenarios" id="scenarios"></div>
+  </div>
+
+  <div class="stage">
+    <div class="controls">
+      <span class="clock" id="clock">t+00:00</span>
+      <span class="next-hint" id="next-hint"><strong>Pronto para iniciar</strong></span>
+      <button class="btn" id="reset-btn">Reiniciar</button>
+      <button class="btn btn-primary" id="step-btn">Avançar →</button>
+    </div>
+    <div class="chat" id="chat"></div>
+    <div class="state-panel">
+      <div class="state-card">
+        <div class="state-label">Status</div>
+        <div class="state-value"><span class="status-pill status-active" id="status">em_andamento</span></div>
+      </div>
+      <div class="state-card">
+        <div class="state-label">Nível atual</div>
+        <div class="state-value" id="level">N1</div>
+      </div>
+      <div class="state-card">
+        <div class="state-label">Contato mencionado</div>
+        <div class="state-value" id="contact">—</div>
+      </div>
+      <div class="state-card">
+        <div class="state-label">Canal</div>
+        <div class="state-value" id="channel">WhatsApp (Evolution)</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <strong>Hitfy Voice AI v2</strong> · Comunicação por texto em grupo · Simulador interativo · Dados fictícios
+  </footer>
+</div>
+
+<script>
+const ICONS = {
+  clock: '<svg class="msg-event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>',
+  arrowUp: '<svg class="msg-event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
+  check: '<svg class="msg-event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  stop: '<svg class="msg-event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
+  x: '<svg class="msg-event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>',
+  spark: '<svg class="msg-event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L13.5 9 L20 10 L14.5 13.5 L16 20 L12 16.5 L8 20 L9.5 13.5 L4 10 L10.5 9 Z"/></svg>',
+};
+
+const SCENARIOS = [
+  {
+    id: 'happy',
+    title: 'Resolução rápida',
+    desc: 'N1 responde logo de primeira',
+    tag: 'Cenário padrão',
+    tagClass: 'tag-happy',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @João (N1)', text:'🚨 Link down em SRV-PROD-01. Deseja abrir um CHAMADO ou colocar em MANUTENÇÃO?', level:'N1', contact:'João'},
+      {t:15, kind:'contact', who:'João', text:'chamado'},
+      {t:16, kind:'ai', text:'Agente IA: pergunta ofereceu 2 ações, "chamado" mapeia diretamente para abrir chamado.'},
+      {t:17, kind:'resolve', action:'Abrir chamado', by:'João'},
+    ]
+  },
+  {
+    id: 'maint',
+    title: 'Manutenção programada',
+    desc: 'N1 opta por silenciar o alerta',
+    tag: 'Cenário padrão',
+    tagClass: 'tag-happy',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @Fernanda (N1)', text:'🚨 Disco > 85% em NAS-02. Deseja abrir CHAMADO ou colocar em MANUTENÇÃO?', level:'N1', contact:'Fernanda'},
+      {t:22, kind:'contact', who:'Fernanda', text:'manut, já tem expansão agendada pra amanhã'},
+      {t:23, kind:'ai', text:'Agente IA: resposta inclui "manut" + justificativa. Mapeia para manutenção.'},
+      {t:24, kind:'resolve', action:'Colocar em manutenção', by:'Fernanda'},
+    ]
+  },
+  {
+    id: 'swarm',
+    title: 'Swarming — outro responde',
+    desc: 'N2 é chamado, mas N3 resolve',
+    tag: 'Swarming válido',
+    tagClass: 'tag-swarm',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @Bruno (N1)', text:'🚨 API gateway com 502 em APP-API-07. Abrir CHAMADO ou colocar em MANUTENÇÃO?', level:'N1', contact:'Bruno'},
+      {t:300, kind:'timeout', text:'Bruno não respondeu em 5 min.'},
+      {t:301, kind:'escalate', level:'N2', contact:'Helena'},
+      {t:301, kind:'bot', who:'Bot → @Helena (N2)', text:'⏰ @Helena, @Bruno não respondeu. 502 em APP-API-07. CHAMADO ou MANUTENÇÃO?'},
+      {t:380, kind:'contact', who:'Rafael (N3)', text:'pode deixar comigo, já tô olhando — abre chamado'},
+      {t:381, kind:'ai', text:'Agente IA: resposta de membro do grupo não mencionado — swarming válido. "abre chamado" é ação clara.'},
+      {t:382, kind:'system', text:'Sessão resolvida por Rafael (N3) apesar da menção estar em Helena (N2).'},
+      {t:383, kind:'resolve', action:'Abrir chamado', by:'Rafael (swarming)'},
+    ]
+  },
+  {
+    id: 'ambiguous-close',
+    title: 'Ambíguo → encerra',
+    desc: 'Contato responde vago, não confirma',
+    tag: 'Encerramento por ambiguidade',
+    tagClass: 'tag-ambig',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @Maria (N1)', text:'🚨 CPU > 95% em DB-ORACLE-03. Deseja abrir um CHAMADO ou colocar em MANUTENÇÃO?', level:'N1', contact:'Maria'},
+      {t:132, kind:'contact', who:'Maria', text:'tá, vou olhar'},
+      {t:133, kind:'ai', text:'Agente IA: ciência sem escolher entre as 2 ações. Classifica como ambíguo.'},
+      {t:134, kind:'bot', who:'Bot → @Maria (insistência)', text:'Obrigado pelo retorno, @Maria. Só para confirmar: CHAMADO ou MANUTENÇÃO? (TTL resetado para 5 min)'},
+      {t:434, kind:'timeout', text:'5 min sem resposta classificável após insistência única.'},
+      {t:435, kind:'close', reason:'encerrada_apos_ambiguidade'},
+    ]
+  },
+  {
+    id: 'ambiguous-recover',
+    title: 'Ambíguo → recupera',
+    desc: 'Contato esclarece após insistência',
+    tag: 'Recuperação',
+    tagClass: 'tag-happy',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @Diego (N1)', text:'🚨 Queda de link em ROTA-SAO-01. Abrir CHAMADO ou MANUTENÇÃO?', level:'N1', contact:'Diego'},
+      {t:45, kind:'contact', who:'Diego', text:'blz, eu cuido'},
+      {t:46, kind:'ai', text:'Agente IA: aceitou o alerta mas não escolheu entre as 2 ações. Ambíguo.'},
+      {t:47, kind:'bot', who:'Bot → @Diego (insistência)', text:'@Diego, para finalizar: você quer abrir um CHAMADO ou colocar em MANUTENÇÃO?'},
+      {t:120, kind:'contact', who:'Diego', text:'ah, chamado mesmo'},
+      {t:121, kind:'ai', text:'Agente IA: resposta clara após insistência. Ação extraída: abrir chamado.'},
+      {t:122, kind:'resolve', action:'Abrir chamado', by:'Diego'},
+    ]
+  },
+  {
+    id: 'cascade',
+    title: 'Cascata de 3 níveis',
+    desc: 'Dois timeouts até alguém responder',
+    tag: 'Escalonamento',
+    tagClass: 'tag-cascade',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @Pedro (N1)', text:'🚨 Storage offline em FILE-SRV-02 + disk I/O crítico (2 eventos condensados). Abrir CHAMADO ou MANUTENÇÃO?', level:'N1', contact:'Pedro'},
+      {t:300, kind:'timeout', text:'TTL 5min expirado. Pedro não respondeu.'},
+      {t:301, kind:'escalate', level:'N2', contact:'Ana'},
+      {t:301, kind:'bot', who:'Bot → @Ana (N2)', text:'⏰ @Ana, @Pedro não respondeu em 5 min. Storage offline em FILE-SRV-02 + disk I/O. Abrir CHAMADO ou MANUTENÇÃO?'},
+      {t:600, kind:'timeout', text:'TTL 5min expirado. Ana não respondeu.'},
+      {t:601, kind:'escalate', level:'N3', contact:'Lucas'},
+      {t:601, kind:'bot', who:'Bot → @Lucas (N3)', text:'⏰ @Lucas, sem resposta dos anteriores. Storage offline + disk I/O crítico. Abrir CHAMADO ou MANUTENÇÃO?'},
+      {t:750, kind:'contact', who:'Lucas', text:'abre um chamado urgente'},
+      {t:751, kind:'ai', text:'Agente IA: "abre um chamado urgente" → ação clara de abrir chamado.'},
+      {t:752, kind:'resolve', action:'Abrir chamado', by:'Lucas'},
+    ]
+  },
+  {
+    id: 'disambig',
+    title: 'Desambiguação de sessões',
+    desc: '2 comunicações abertas, contato confunde',
+    tag: 'Múltiplas sessões',
+    tagClass: 'tag-cascade',
+    steps: [
+      {t:0, kind:'system', text:'Sessão #301 criada 6 minutos antes (Storage em FILE-SRV-02), @Carlos mencionado (N1).'},
+      {t:0, kind:'system', text:'Sessão #302 criada agora (CPU em DB-ORACLE-03), @Carlos mencionado (N1) no mesmo grupo.'},
+      {t:75, kind:'contact', who:'Carlos', text:'já tô indo olhar'},
+      {t:76, kind:'ai', text:'Agente IA: mensagem sem quote + 2 sessões abertas → não dá para inferir qual é o alvo.'},
+      {t:77, kind:'bot', who:'Bot → @Carlos (desambiguação)', text:'@Carlos, há 2 comunicações abertas neste grupo. A qual você se refere?  [1] Storage em FILE-SRV-02  [2] CPU em DB-ORACLE-03  (responda 1 ou 2)'},
+      {t:90, kind:'contact', who:'Carlos', text:'a 2'},
+      {t:91, kind:'ai', text:'Agente IA: "a 2" → sessão #302 (CPU). Reavalia a resposta original no contexto dessa sessão.'},
+      {t:92, kind:'system', text:'Resposta original "já tô indo olhar" → ambígua para #302. Bot vai insistir nela.'},
+      {t:93, kind:'bot', who:'Bot → @Carlos (#302)', text:'@Carlos, para a comunicação da CPU em DB-ORACLE-03: abrir CHAMADO ou MANUTENÇÃO?'},
+      {t:140, kind:'contact', who:'Carlos', text:'manut, é carga programada'},
+      {t:141, kind:'ai', text:'Agente IA: "manut" na #302 → ação clara de manutenção.'},
+      {t:142, kind:'resolve', action:'Colocar em manutenção (#302)', by:'Carlos'},
+      {t:143, kind:'system', text:'Sessão #301 segue em_andamento — @Carlos ainda é o responsável mencionado nela.'},
+    ]
+  },
+  {
+    id: 'todos',
+    title: 'N+1 → @todos resolve',
+    desc: 'Ninguém nomeado responde, alguém do grupo age',
+    tag: 'Swarming válido',
+    tagClass: 'tag-swarm',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @Karla (N1)', text:'🚨 Falha de replicação em DB-MYSQL-11. Abrir CHAMADO ou MANUTENÇÃO?', level:'N1', contact:'Karla'},
+      {t:300, kind:'timeout', text:'Karla não respondeu.'},
+      {t:301, kind:'escalate', level:'N2', contact:'Igor'},
+      {t:301, kind:'bot', who:'Bot → @Igor (N2)', text:'⏰ @Igor, @Karla não respondeu. Falha de replicação em DB-MYSQL-11. CHAMADO ou MANUTENÇÃO?'},
+      {t:600, kind:'timeout', text:'Igor não respondeu.'},
+      {t:601, kind:'escalate', level:'@todos', contact:'grupo todo'},
+      {t:601, kind:'bot', who:'Bot → @todos (N+1)', text:'⚠️ @todos — sem resposta dos contatos nomeados. Falha de replicação em DB-MYSQL-11. Alguém pode verificar? Caso precisem de apoio, contatem o executivo da Visual Systems.'},
+      {t:720, kind:'contact', who:'Thaís (não nomeada)', text:'opa, chamado pra esse aí'},
+      {t:721, kind:'ai', text:'Agente IA: resposta de membro não mencionado — swarming válido em @todos. "chamado" é ação clara.'},
+      {t:722, kind:'resolve', action:'Abrir chamado', by:'Thaís (grupo)'},
+    ]
+  },
+  {
+    id: 'failed',
+    title: 'Escalation failed',
+    desc: 'Sequência esgota sem ninguém responder',
+    tag: 'Exceção',
+    tagClass: 'tag-fail',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @Roberto (N1)', text:'🚨 Backup noturno falhou em FILE-SRV-02. Abrir CHAMADO ou MANUTENÇÃO?', level:'N1', contact:'Roberto'},
+      {t:300, kind:'timeout', text:'Roberto não respondeu.'},
+      {t:301, kind:'escalate', level:'N2', contact:'Patrícia'},
+      {t:301, kind:'bot', who:'Bot → @Patrícia (N2)', text:'⏰ @Patrícia, Roberto não respondeu. Backup falhou em FILE-SRV-02. Abrir CHAMADO ou MANUTENÇÃO?'},
+      {t:600, kind:'timeout', text:'Patrícia não respondeu.'},
+      {t:601, kind:'escalate', level:'@todos', contact:'grupo todo'},
+      {t:601, kind:'bot', who:'Bot → @todos (N+1)', text:'⚠️ @todos — sem resposta. Backup falhou em FILE-SRV-02. Caso precisem de apoio, contatem o executivo da Visual Systems.'},
+      {t:900, kind:'timeout', text:'Ninguém no grupo respondeu.'},
+      {t:901, kind:'fail', reason:'escalation_failed'},
+    ]
+  },
+  {
+    id: 'no-gt',
+    title: 'Cliente sem GT',
+    desc: 'Pede ticket mas não tem contrato',
+    tag: 'Adaptação GT',
+    tagClass: 'tag-ambig',
+    steps: [
+      {t:0, kind:'bot', who:'Bot → @Sandra (N1)', text:'🚨 CPU crítica em WEB-PROD-05. Deseja colocar em MANUTENÇÃO?', level:'N1', contact:'Sandra'},
+      {t:30, kind:'ai', text:'Cliente sem GT (consultado em runtime). Mensagem adaptada — só oferece manutenção.'},
+      {t:60, kind:'contact', who:'Sandra', text:'abre um chamado pra eles resolverem'},
+      {t:61, kind:'ai', text:'Agente IA: cliente pediu chamado, mas has_gt=false. Direciona para executivo da Visual Systems.'},
+      {t:62, kind:'bot', who:'Bot → @Sandra', text:'@Sandra, seu contrato atual inclui apenas Gestão de Eventos (sem GT). Abertura de chamados não está contratada — recomendamos contatar o executivo da Visual Systems para tratativa. Deseja colocar em MANUTENÇÃO enquanto isso?'},
+      {t:110, kind:'contact', who:'Sandra', text:'ok, coloca manut então'},
+      {t:111, kind:'ai', text:'Agente IA: "coloca manut" → ação clara de manutenção.'},
+      {t:112, kind:'resolve', action:'Colocar em manutenção', by:'Sandra'},
+    ]
+  },
+];
+
+let current = SCENARIOS[0];
+let stepIdx = 0;
+
+const $ = (id) => document.getElementById(id);
+const elScenarios = $('scenarios');
+const elClock = $('clock');
+const elHint = $('next-hint');
+const elStep = $('step-btn');
+const elReset = $('reset-btn');
+const elChat = $('chat');
+const elStatus = $('status');
+const elLevel = $('level');
+const elContact = $('contact');
+
+function renderScenarios() {
+  elScenarios.innerHTML = SCENARIOS.map(s => `
+    <button class="scen-btn ${s.id === current.id ? 'active' : ''}" data-id="${s.id}">
+      <span class="scen-tag ${s.tagClass}">${s.tag}</span>
+      <div class="scen-title">${s.title}</div>
+      <div class="scen-desc">${s.desc}</div>
+    </button>
+  `).join('');
+  elScenarios.querySelectorAll('.scen-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      current = SCENARIOS.find(s => s.id === b.dataset.id);
+      reset();
+    });
+  });
+}
+
+function fmtTime(t) {
+  const m = Math.floor(t / 60);
+  const s = t % 60;
+  return 't+' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function setStatus(key, label) {
+  elStatus.className = 'status-pill status-' + key;
+  elStatus.textContent = label;
+}
+
+function renderEmpty() {
+  elChat.innerHTML = `
+    <div class="chat-empty">
+      <div class="chat-empty-icon">→</div>
+      <div class="chat-empty-text">Aperte <strong>Avançar</strong> para simular o cenário <strong>${current.title}</strong> passo a passo.</div>
+    </div>
+  `;
+}
+
+function reset() {
+  stepIdx = 0;
+  elClock.textContent = 't+00:00';
+  elStep.disabled = false;
+  elLevel.textContent = 'N1';
+  elContact.textContent = '—';
+  setStatus('active', 'em_andamento');
+  renderScenarios();
+  renderEmpty();
+  updateHint();
+}
+
+function updateHint() {
+  if (stepIdx >= current.steps.length) {
+    elHint.innerHTML = '<strong>Cenário concluído.</strong> Escolha outro acima ou reinicie.';
+    elStep.disabled = true;
+    return;
+  }
+  const next = current.steps[stepIdx];
+  const prev = stepIdx > 0 ? current.steps[stepIdx-1].t : 0;
+  const delta = next.t - prev;
+  const labels = {
+    bot: 'bot envia mensagem',
+    contact: 'contato responde',
+    ai: 'Agente IA interpreta',
+    system: 'evento do sistema',
+    timeout: 'TTL de 5min expira',
+    escalate: 'escalação de nível',
+    resolve: 'sessão resolvida',
+    close: 'encerramento',
+    fail: 'escalation_failed',
+  };
+  const deltaStr = delta === 0 ? 'imediato' : delta >= 60 ? `+${Math.floor(delta/60)} min` : `+${delta}s`;
+  elHint.innerHTML = `Próximo: <strong>${labels[next.kind]}</strong> <span style="color: var(--text-dim);">· ${deltaStr}</span>`;
+}
+
+function clearEmpty() {
+  const empty = elChat.querySelector('.chat-empty');
+  if (empty) elChat.innerHTML = '';
+}
+
+function addMsg(step) {
+  clearEmpty();
+  const d = document.createElement('div');
+  d.className = 'msg';
+  if (step.kind === 'bot') {
+    d.classList.add('msg-bot');
+    d.innerHTML = `<div class="msg-head">${step.who}</div>${step.text}`;
+  } else if (step.kind === 'contact') {
+    d.classList.add('msg-contact');
+    d.innerHTML = `<div class="msg-head">${step.who}</div>${step.text}`;
+  } else if (step.kind === 'system') {
+    d.classList.add('msg-system');
+    d.innerHTML = `<span>${step.text}</span>`;
+  } else if (step.kind === 'ai') {
+    d.classList.add('msg-event', 'msg-event-ai');
+    d.innerHTML = `${ICONS.spark}<span>${step.text}</span>`;
+  } else if (step.kind === 'timeout') {
+    d.classList.add('msg-event', 'msg-event-timeout');
+    d.innerHTML = `${ICONS.clock}<span>${step.text}</span>`;
+  } else if (step.kind === 'escalate') {
+    d.classList.add('msg-event', 'msg-event-escalate');
+    d.innerHTML = `${ICONS.arrowUp}<span>Escalando para <strong>${step.level}</strong>: @${step.contact}</span>`;
+    elLevel.textContent = step.level;
+    elContact.textContent = step.contact;
+  } else if (step.kind === 'resolve') {
+    d.classList.add('msg-event', 'msg-event-resolve');
+    d.innerHTML = `${ICONS.check}<span>Sessão resolvida por <strong>${step.by}</strong> — ${step.action}</span>`;
+    setStatus('resolved', 'resolvido');
+  } else if (step.kind === 'close') {
+    d.classList.add('msg-event', 'msg-event-close');
+    d.innerHTML = `${ICONS.stop}<span>Sessão encerrada: <strong>${step.reason}</strong></span>`;
+    setStatus('closed', step.reason);
+  } else if (step.kind === 'fail') {
+    d.classList.add('msg-event', 'msg-event-fail');
+    d.innerHTML = `${ICONS.x}<span><strong>${step.reason}</strong> — fluxo de exceção da plataforma assume</span>`;
+    setStatus('failed', step.reason);
+  }
+  elChat.appendChild(d);
+  elChat.scrollTop = elChat.scrollHeight;
+}
+
+elStep.addEventListener('click', () => {
+  if (stepIdx >= current.steps.length) return;
+  const step = current.steps[stepIdx];
+  if (step.level) elLevel.textContent = step.level;
+  if (step.contact && step.kind === 'bot') elContact.textContent = step.contact;
+  elClock.textContent = fmtTime(step.t);
+  addMsg(step);
+  stepIdx++;
+  updateHint();
+});
+
+elReset.addEventListener('click', reset);
+
+reset();
+</script>
+</body>
+</html>
